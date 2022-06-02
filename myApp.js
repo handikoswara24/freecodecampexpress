@@ -1,8 +1,10 @@
 let express = require('express');
+let bodyParser = require('body-parser');
 let app = express();
 
 console.log("Hello World");
-app.use("/public",express.static(__dirname + "/public"))
+app.use(bodyParser.urlencoded({extended: false}));
+app.use("/public",express.static(__dirname + "/public"));
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.path} - ${req.ip}`);
   next();
@@ -34,6 +36,20 @@ app.get("/now", (req, res, next) => {
 app.get("/:word/echo", (req, res) => {
   res.json({
     echo : req.params.word
+  })
+})
+
+app.route("/name").get((req, res) => {
+  const name = `${req.query.first} ${req.query.last}`;
+
+  res.json({
+    name
+  })
+}).post((req, res) => {
+  const name = `${req.body.first} ${req.body.last}`;
+
+  res.json({
+    name
   })
 })
 
